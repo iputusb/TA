@@ -1,0 +1,10 @@
+{% if tableRecords.items != [] %}
+    {{ tableRecords.per_page*(tableRecords.page - 1) + 1 }} 
+    to 
+    {{ tableRecords.per_page*tableRecords.page if tableRecords.per_page*tableRecords.page <= count else count }}
+    of 
+    {{ count }} 
+    records
+{% else %}
+    No record to show...
+{% endif%}

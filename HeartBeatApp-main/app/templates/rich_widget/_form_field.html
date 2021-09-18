@@ -1,0 +1,36 @@
+{% macro f_form_field(field) -%}
+    <div class="form-group row">
+        {{ field.label(class="col-sm-4 col-form-label") }}
+
+        {% if field.errors %}
+            <div class="col-sm-8">
+                {% if field.type == 'SelectMultipleField' %}
+                    {{ field(class="form-control is-invalid selectpicker", multiple="multiple") }}
+                {% else %}
+                    {{ field(class="form-control is-invalid ") }}
+                {% endif %}
+                <div class="invalid-feedback">
+                    {% for error in field.errors %}
+                        <span class="text-red">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="col-sm-8">
+                {% if field.type == 'SelectMultipleField' %}
+                    {{ field(class="form-control selectpicker", multiple="multiple") }}
+                {% elif field.type == 'BooleanField' %}
+                    {{ field(class="big-checkbox my-sm-4") }}
+                {% elif field.type == 'FileField' %}
+                    {{ field(class="my-sm-1") }}
+                {% else %}
+                    {{ field(class="form-control ") }}
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{%- endmacro %}
+
+{% macro f_form_button(field) -%}
+    {{ field(class="btn btn-primary pull-right") }}
+{%- endmacro %}

@@ -1,0 +1,80 @@
+{% macro f_tableRecords(headerCtrl, tableHeader, tableRecords, footerCtrl) -%}
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <div class="row">
+            <!-- search widget -->
+            <div class="col-md-6 padding-0">
+            {% if headerCtrl.is_search %}
+                {% with action= headerCtrl.search_act, table_search=headerCtrl.table_search %}
+                    {% include 'rich_widget/_search_widget.html' %}
+                {% endwith %}
+            {% endif %}
+            </div>
+
+            <div class="col-md-6">
+            <!-- add new data -->
+            {% if headerCtrl.is_add_new %}
+                <a href="{{ url_for(headerCtrl.detail_act, _id=0)}}" class="btn btn-primary float-right">
+                    <i class="fa fa-user-plus"></i> Add a New {{ headerCtrl.name }}
+                </a>
+            {% endif %}
+            <!-- export widget -->
+            {% if headerCtrl.is_export %}
+                <a href="{{ url_for(headerCtrl.export_act, filename=headerCtrl.export_filename)}}" class="btn btn-primary float-right mr-sm-2">
+                    <i class="fa fa-download"></i> Export
+                </a>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- /.box-header -->
+        
+    <div class="card" id="usersRecords">
+    {% if tableRecords is not none  %}
+        <div class="card-body table-responsive no-padding my-custom-scrollbar">
+            <!-- table records -->
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        {% from 'rich_widget/_sort.html' import f_sort %}
+                        {% for _col_, _label in tableHeader.items() %}
+                            <th> {{ f_sort(_label, _col_, headerCtrl.sort_act, footerCtrl._type, footerCtrl._col == _col_) }}</th>
+                        {% endfor %}
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in tableRecords.items %}
+                    <tr>
+                        {{ caller(loop, record) }}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        No records to show ... 
+    {% endif %}
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- List Counter -->
+                <ul class="m-sm-0 px-sm-0 py-sm-2 float-left">
+                {% with tableRecords = tableRecords, count= footerCtrl.count %}
+                    {% include 'rich_widget/_list_counter.html' %}
+                {% endwith %}
+                </ul>
+            </div>
+            <div class="col-md-6 py-sm-2">
+                <!-- Pagination -->
+                {% with tableRecords= tableRecords, min_page= footerCtrl.min_page, max_page= footerCtrl.max_page, destination= footerCtrl.pagination_act %}
+                    {% include 'rich_widget/_pagination.html' %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+    <!-- /.box-footer-->
+</div>
+{%- endmacro  %}

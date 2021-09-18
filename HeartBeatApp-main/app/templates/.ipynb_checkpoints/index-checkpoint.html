@@ -1,0 +1,74 @@
+{% extends "_layout.html" %}
+{% block content %}
+<div class="container">
+    <div class="rounded bg-danger mb-3">
+        <form class="form-horizontal" 
+            action="{{ url_for('detect') }}" 
+            method="post"
+            enctype="multipart/form-data">
+            <!-- field upload CSV -->
+            <div class="btn-group py-3 pl-3">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="inputGroupFile01" name="file">
+                    <label class="custom-file-label" for="inputGroupFile01">Choose ECG Signal (.csv)</label>
+                </div>
+            </div>
+            <!-- end field upload CSV -->
+            <!-- field select feature -->
+            <div class="btn-group py-3 pl-3">
+                <select class="custom-select" name="feature">
+                    <option value="empty" {{ 'selected' if signal.feature == '' }}>Select Feature</option>
+                    {% for key, value in feature_labels.items() %}
+                    <option value="{{ key }}" {{ 'selected' if signal.feature == key}}>{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- end field select feature -->
+            <!-- button detection -->
+            <button type="submit" class="btn btn-light ml-3">
+                <i class="fa fa-magic mr-2"></i>Detect
+            </button>   
+            <!-- end button detection -->    
+            <!-- link navigate ECG index  -->
+            {% if signal.index_length > 0 %}
+            <div class="btn-group py-3 float-right">
+                <a href="{{ url_for('navigate_signal', _index = signal.curr_index - 1) }}"  class="btn btn-light {{'disabled' if signal.curr_index == 0 else ''}}">
+                    <i class="fa fa-chevron-left"></i> Prev
+                </a>
+                <span class="btn btn-light">{{ signal.curr_index}}/{{signal.index_length}}</span>
+                <a href="{{ url_for('navigate_signal', _index = signal.curr_index + 1) }}" class="btn btn-light mr-3 {{'disabled' if signal.curr_index == (signal.index_length - 1) else ''}}">
+                    Next <i class="fa fa-chevron-right"></i>
+                </a> 
+            </div>
+            {% endif %}
+            <!-- end link navigate ECG index  -->
+        </form>
+    </div>
+    <div class="rounded bg-danger p-2">
+        <div class="container bg-light mb-2 p-2">
+            {% if signal.predicted_label %}
+                Predicted Label : <b>{{signal.predicted_label}} ({{ signal.predicted_proba }}%)</b> - index <b>{{ signal.curr_index}}/{{signal.index_length}}</b>
+            {% else %} 
+                Predicted Label : N/A
+            {% endif %}    
+        </div>
+        {% if signal.signal_img %}
+            {% for path in signal.signal_img %}
+            <img src={{ path }}  class="img-fluid mb-2">
+            {% endfor %}
+        {% else %}
+            <img src="/static/img/empty_signals.png"  class="img-fluid">
+        {% endif %} 
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    // custom script to update custom label input file to uploaded filename
+    $('.custom-file-input').on('change', function() { 
+        let fileName = $(this).val().split('\\').pop(); 
+        $(this).next('.custom-file-label').addClass("selected").html(fileName); 
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% macro f_form(formCtrl, form) -%}
+<div class="card">
+    <form   class="form-horizontal" 
+            action="{{ url_for(formCtrl.form_act, _id = formCtrl._id) }}" 
+            method="post"
+            {{ 'enctype=multipart/form-data' if formCtrl.is_multipart else '' }}>
+    <div class="card-header with-border bg-white">
+        <h3 class="card-title"> {{ formCtrl.form_name }}</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        {{ form.hidden_tag() }}
+        {% for item in form %}
+            {{ caller('content', item) }}
+        {% endfor %}
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer bg-white">
+        <a href="{{ url_for(formCtrl.cancel_act) }}" class="btn btn-secondary">Cancel</a>
+        {% for item in form %}
+            {{ caller('footer', item) }}
+        {% endfor %}
+        {% if 'delete_act' in formCtrl and formCtrl._id %}
+            <a href="{{ url_for(formCtrl.delete_act, _id = formCtrl._id) }}" class="btn btn-danger pull-right mr_5">Delete</a>
+        {% endif %}
+    </div>
+    <!-- /.card-footer -->
+    </form>
+</div>
+{%- endmacro %}

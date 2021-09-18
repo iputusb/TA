@@ -1,0 +1,6 @@
+"rr_interval" : "RR Interval",
+    "qt_interval" : "QT Interval",
+    "qrs_complex" : "QRS Complex",
+    "rr_interval,qt_interval" : "RR Interval & QT Interval",
+    "rr_interval,qrs_complex" : "RR Interval & QRS Complex",
+    "qt_interval,qrs_complex" : "QT Interval & QRS Complex",

@@ -1,0 +1,41 @@
+{% extends "_layout.html" %}
+{% block content %}
+<!-- Content Header (Page header) -->
+  <section class="container">
+    <h1>
+      Deep Learning Model
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Deep Learning Model</li>
+    </ol>
+  </section>
+  
+  <section class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Table Records Widget -->
+          {% from 'rich_widget/_table_records.html' import f_tableRecords %}
+          {% call(loop, record) f_tableRecords(headerCtrl, tableHeader, tableRecords, footerCtrl) %}
+            <!-- Create Table Content -->
+            <td>{{ loop.index + tableRecords.per_page*(tableRecords.page - 1) }}</td>
+            <td>{{ record['file_name'] }}</td>
+            <td><i class= "fa {{ 'fa-check text-green' if record['is_used'] else 'fa-close'}}" ></i></td>
+            <td>{{ record['upload_at'].strftime("%m/%d/%Y %H:%M:%S") }}</td>
+            <td>{{ record['upload_by'] }}</td>
+            <td>
+              <a href="{{ url_for(headerCtrl.detail_act, _id = record['id']) }}" class="btn btn-xs btn-primary">
+                <i class="fa fa-edit"></i>
+              </a>
+              {% if 'delete_act' in headerCtrl %}
+                <a href="{{ url_for(headerCtrl.delete_act, _id = record['id']) }}" class="btn btn-xs btn-danger ml_5">
+                  <i class="fa fa-trash"></i>
+                </a>
+              {% endif %}
+            </td>
+          {% endcall %}
+        </div>
+      </div>
+    </section>
+  <!-- /.content -->
+{% endblock %}

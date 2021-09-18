@@ -1,0 +1,50 @@
+{% extends "_layout.html" %}
+{% block content %}
+<!-- Content Header (Page header) -->
+<section class="container">
+  <h1>
+    {{ 'Upload Deep Learning Model' if form.name.data is none else form.name.data }}
+  </h1>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Upload Deep Learning Model</li>
+  </ol>
+</section>
+
+<section class="container">
+  <div class="row">
+    <div class="col-lg-6">
+      {% from 'rich_widget/_form_widget.html' import f_form %}
+      {% from 'rich_widget/_form_field.html' import f_form_field, f_form_button %}
+
+      {% call(type, item) f_form(formCtrl, form) %}
+        
+        {% if type == 'content' and item.name in formCtrl.inputField %}
+          {{ f_form_field(item) }}
+
+          <!-- custom field download & label uploaded file -->
+          {% if item.type == 'FileField' and formCtrl._id %}
+            <hr>
+            <div class="form-group row">
+              <label class="col-form-label col-sm-4">Uploaded File</label>
+              <div class="col-sm-8">
+                <div class="">
+                  {{ formCtrl.download_name }} 
+                  <a href="{{ url_for(formCtrl.download_act, filename=formCtrl.download_name)}}" class="btn btn-primary btn-xs">
+                    <i class="fa fa-download"></i> Download
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+        {% elif type == 'footer' and item.name in formCtrl.submitField %}
+          {{ f_form_button(item) }}
+        {% endif %}
+
+      {% endcall %}
+    </div>
+  </div>
+</section>
+<!-- /.content -->
+{% endblock %}

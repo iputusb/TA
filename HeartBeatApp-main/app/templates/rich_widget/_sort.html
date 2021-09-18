@@ -1,0 +1,13 @@
+{% macro f_sort(_label, _col_, _act, _type, _change) -%}
+{% if _label[1] %}
+<form method="POST" action="{{ url_for(_act) }}" id="this_form_{{ _col_ }}" class="mb-sm-0">           
+    <input type="hidden" name="sort" value="{{ 'desc' if _type == 'asc' else 'asc'}}">
+    <input type="hidden" name="column" value="{{ _col_ }}">
+    <a href="javascript:{}" onclick="document.getElementById('this_form_{{ _col_ }}').submit(); return false;">
+        {{ _label[0] }} <i class="fa fa-sort-{{ _type if _change else 'asc'}}"></i>
+    </a>
+</form>
+{% else %}
+    {{ _label[0] }}
+{% endif %}
+{%- endmacro %}
